@@ -40,7 +40,7 @@ def check_inpic(x, y, img_msg):
     start_x = float(mid_x) - float(width) / 2
     start_y = float(mid_y) - float(height) / 2
     end_x = float(mid_x) + float(width) / 2
-    end_y = float(start_y) + float(height) / 2
+    end_y = float(mid_y) + float(height) / 2
     try:
         x = float(x)
         y = float(y)
