@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import csv
 
+'''Check if the line start with number'''
 def is_number(line):
     try: 
         int(line[0])
@@ -10,31 +11,37 @@ def is_number(line):
         return False
     return True
 
+'''check if this line is a MSG'''
 def is_msg(line):
     if line[0:3] == 'MSG':
         return True
     return False 
 
+'''check if this is an empty line'''
 def is_newline(line):
     if line == '' or line == '\n':
         return True
     return False
 
+'''Check if is a fix behavior'''
 def is_fix(line):
     if "SFIX" in line or "EFIX" in line:
         return True
     return False
 
+'''Check if is a sacc behavior'''
 def is_sacc(line):
     if "SSACC" in line or "ESACC" in line:
         return True
     return False
 
+'''check if it is a blink behavior'''
 def is_blink(line):
     if "SBLINK" in line or "EBLINK" in line:
         return True
     return False    
 
+'''Check if the coordinate [x, y] is on the picture'''
 def check_inpic(x, y, img_msg):
     [mid_x, mid_y, width, height] = img_msg[1:]
     start_x = float(mid_x) - float(width) / 2
@@ -50,7 +57,7 @@ def check_inpic(x, y, img_msg):
     except:
         return False
 
-
+'''handle forced memory event'''
 def process_forcedmemory(msg_marker, msg, data, current_data_index, current_msg_index):
     assert("forcedmemory_start" in msg[current_msg_index][3])
     start_msg_index = current_msg_index
@@ -81,7 +88,7 @@ def process_forcedmemory(msg_marker, msg, data, current_data_index, current_msg_
         current_data_index += 1 
     return [current_data_index, current_msg_index, msg_marker]
  
-
+'''check if the coordiante [x, y] is in the box'''
 def check_inbox(x, y, box_msg):
     [start_x, start_y, end_x, end_y] = box_msg
     start_x = float(start_x)
@@ -97,6 +104,7 @@ def check_inbox(x, y, box_msg):
     except:
         return False
 
+'''find which picture has been fixed'''
 def fix_on_picnum(x, y, img_msg_bottom, img_msg_left, img_msg_right):
     if check_inpic(x, y, img_msg_bottom):
         return 0
@@ -107,7 +115,7 @@ def fix_on_picnum(x, y, img_msg_bottom, img_msg_left, img_msg_right):
     else:
         return -1
 
-
+'''find which box has been chosen'''
 def fix_on_boxnum(x, y, box_msg_bottom, box_msg_left, box_msg_right):
     if check_inbox(x, y, box_msg_bottom):
         return 0
@@ -118,7 +126,7 @@ def fix_on_boxnum(x, y, box_msg_bottom, box_msg_left, box_msg_right):
     else:
         return -1
 
-
+'''handle forced choice evenr'''
 def process_forcedchoice(msg_marker, msg, data, current_data_index, current_msg_index):
     assert("forcedchoice_start" in msg[current_msg_index][3])
     start_msg_index = current_msg_index
@@ -330,7 +338,7 @@ def match_behavior_data():
 
 
 if __name__ == '__main__':
-    removed_header = clean_calibration("./J030702.asc")
+    removed_header = clean_calibration("./J030701.asc")
     extract_raw_to_data_movement(removed_header)
     match_movement_data()
     match_behavior_data()
